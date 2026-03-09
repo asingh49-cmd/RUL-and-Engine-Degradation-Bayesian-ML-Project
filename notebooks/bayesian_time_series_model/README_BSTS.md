@@ -223,8 +223,6 @@ The Kalman Filter is a physics-based approach that tracks hidden "health" and "d
 - Assumes linear sensor-health relationship (actual is non-linear)
 - Can't adapt to different degradation patterns across engines
 
-### **Why BSTS Wins**
-
 **Key Insight**: Data-driven approaches (BSTS) often outperform physics-based models (Kalman) when:
 - System dynamics are complex and non-linear
 - Extensive domain expertise for tuning is unavailable

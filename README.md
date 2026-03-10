@@ -12,10 +12,12 @@ Standard deterministic models in aviation predictive maintenance often produce o
 
 This probabilistic approach enables a safety-first framework where maintenance decisions can be optimized based on the degree of predictive uncertainty rather than relying solely on a low RUL estimate.
 
-#structure for new readme:
-- first we go over business problem
-- then we discuss the 2 methods time series and baysian (dbn) and show time series models preform well
-- then adi dives into baysian time series models
+# structure for new readme:
+- first lalo goes over business problem and hierarchical bayes models 
+- then mukul discusses baysian (dbn)
+- then adi dives into baysian time series models; shows between 2 methods, time series models preform better than bayes 
+- then william talks about prophet models
+- 
 
 ## 🚀 Application Area: Aerospace & Predictive Maintenance (PdM)
 

@@ -17,7 +17,7 @@ This probabilistic approach enables a safety-first framework where maintenance d
 - then mukul discusses baysian (dbn)
 - then adi dives into baysian time series models; shows between 2 methods, time series models preform better than bayes 
 - then william talks about prophet models
-- 
+- then ryan does brnn part
 
 ## 🚀 Application Area: Aerospace & Predictive Maintenance (PdM)
 

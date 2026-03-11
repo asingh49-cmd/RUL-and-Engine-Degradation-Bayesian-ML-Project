@@ -28,6 +28,7 @@ data/
 *.jpg
 *.pdf
 !reports/figures/
+!viz/eda_plot.png
 .Rhistory
 .RData
 .Ruserdata

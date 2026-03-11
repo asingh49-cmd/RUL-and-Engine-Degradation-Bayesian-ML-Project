@@ -55,6 +55,61 @@ An additive regression model that treats RUL prediction as a curve-fitting probl
 ### [Bayesian Recurrent Neural Network (BRNN)](./notebooks/bayesian_recurrent_neural_network(brnn)/README.md) — **Best Performing Model**
 Our most advanced architecture, combining **CNN, Attention, and LSTM** layers with **Monte Carlo Dropout**. This model treats RUL prediction as a risk-aware optimization task, utilizing a custom **Asymmetric NASA Loss** and 3-D Calibration to minimize costly "late predictions."
 
+The solution is a multi-stage pipeline:
+
+| Stage | Component | Purpose |
+|-------|-----------|---------|
+| **1** | Piecewise RUL + RobustScaler + Sliding Window | Physically-grounded feature engineering |
+| **2** | CNN-Attention-LSTM with Output Clamping | Temporal & spatial degradation feature extraction |
+| **3** | RUL-Weighted + Asymmetric NASA Loss | Safety-aware training objective |
+| **4** | MC Dropout (Bayesian Inference) | Quantified prediction uncertainty |
+| **5** | 3-D Grid Search Calibration | Post-hoc risk-minimising decision strategy |
+
+
+
+The model architecture is a **three-stage hybrid neural network** that processes sensor time-series through local extraction, global attention, and temporal memory in sequence.
+
+```
+Input (Batch, 30, 17)
+      │
+      ▼
+┌─────────────────────────────────────────────┐
+│  Module 1 · 1D-CNN                          │
+│  Conv1d → ReLU → BatchNorm                  │
+│  Local feature & trend extraction           │
+│  (automated rolling-feature equivalent)     │
+└────────────────────┬────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────┐
+│  Module 2 · Multi-Head Attention (4 heads)  │
+│  Input shape: (Seq_len, Batch, Embed_dim)   │
+│  Global inter-feature dependency learning   │
+│  (which cycles matter most?)                │
+└────────────────────┬────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────┐
+│  Module 3 · Bi-layer LSTM                   │
+│  Long-term degradation history modelling    │
+│  (remembers healthy → failure trajectory)   │
+└────────────────────┬────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────┐
+│  Module 4 · Bayesian FC Head (MC Dropout)   │
+│  Linear(hidden, 64) → ReLU → Dropout        │
+│  Linear(64, 1)                              │
+└────────────────────┬────────────────────────┘
+                     │
+                     ▼
+         torch.clamp(output, 0.0, 130.0)
+         ← Physical ceiling constraint →
+```
+
+
+> **Final Performance:** NASA Score `1,138.28` · RMSE `24.3 cycles`
+
 ---
 
 ## 4. Conclusion & Project Evolution

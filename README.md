@@ -1,60 +1,91 @@
-# Uncertainty-Aware Prognostics: A Hierarchical Bayesian Framework for Probabilistic Health Monitoring of Turbofan Engines
+# Predictive Maintenance for Aircraft Engines: RUL Estimation
 
-![Status](https://img.shields.io/badge/Status-Active-success)
-![Application](https://img.shields.io/badge/Domain-Aerospace%20%2F%20Predictive%20Maintenance-blue)
-![Method](https://img.shields.io/badge/Method-Bayesian%20RNN-orange)
+This repository explores multiple probabilistic and machine learning approaches to predict the **Remaining Useful Life (RUL)** of aircraft engines using the **NASA C-MAPSS** dataset. The project transitions from foundational Bayesian models to complex temporal architectures to optimize for both accuracy and safety-critical risk management.
 
-## 📖 Abstract
+## 1. Business Problem
 
-This project proposes an uncertainty-aware prognostics framework combining a Hierarchical Bayesian regression model and Bayesian Recurrent Neural Network (BRNN) architectures to estimate the probabilistic Remaining Useful Life (RUL) of turbofan engines. 
+Aircraft engine maintenance traditionally relies on **scheduled inspections** or **reactive replacement**. Both methods are inefficient: reactive maintenance risks catastrophic failure, while preventive maintenance often replaces healthy components prematurely.
 
-Standard deterministic models in aviation predictive maintenance often produce overconfident point estimates. By integrating Bayesian inference with the temporal sequence modeling capabilities of recurrent layers, our BRNN is uniquely suited for this task. It allows the model to learn from sequential degradation patterns while explicitly quantifying both **aleatoric** (sensor noise) and **epistemic** (model ignorance) uncertainty. 
+Predicting **Remaining Useful Life (RUL)** enables **Predictive Maintenance**, allowing operators to:
+* Schedule maintenance precisely before failure.
+* Reduce operational disruptions and safety risks.
+* Optimize maintenance costs and component longevity.
 
-This probabilistic approach enables a safety-first framework where maintenance decisions can be optimized based on the degree of predictive uncertainty rather than relying solely on a low RUL estimate.
-
-# structure for new readme:
-- first lalo goes over business problem and hierarchical bayes models 
-- then mukul discusses baysian (dbn)
-- then adi dives into baysian time series models; shows between 2 methods, time series models preform better than bayes 
-- then william talks about prophet models
-- then ryan does brnn part
-
-## 🚀 Application Area: Aerospace & Predictive Maintenance (PdM)
-
-This project focuses on the intersection of aviation safety and industrial IoT, specifically targeting the health monitoring of complex propulsion systems to reduce maintenance costs and prevent catastrophic failures.
-
-### The "Prior" (Project Justification)
-Standard deterministic models in aviation are often "overconfident" in their predictions. By implementing a Bayesian Recurrent Neural Network (BRNN), our team aims to update the posterior probabilities of engine failure in real-time. This allows for a safety-first approach where maintenance is triggered not just by a low RUL estimate, but by a high degree of predictive uncertainty.
-
-## 🎯 Task Description
-
-The core task involves **Probabilistic Remaining Useful Life (RUL) Estimation**, broken down into three main pillars:
-
-* **Estimation (via Regression):** Predicting the specific number of flight cycles remaining before engine failure.
-* **Uncertainty Analysis:** Quantifying aleatoric and epistemic uncertainty to provide a probability distribution rather than a single-point estimate.
-* **Decision Optimization (Optional Extension):** Using Reinforcement Learning to determine optimal maintenance timing based on predicted risk.
-
-## 🧠 Model Architecture
-
-We will not be leveraging a pre-trained foundational model from an existing repository. Instead, the BRNN architecture will be built entirely from scratch.
-
-* **Framework:** PyTorch or TensorFlow/Keras.
-* **Bayesian Integration:** Developing the model from the ground up is necessary to strictly control the integration of Bayesian layers (e.g., utilizing **Monte Carlo Dropout** or **Bayes by Backprop**) within the recurrent temporal structures.
-* **Purpose:** Tailoring the architecture specifically for our multivariate time-series regression task.
-
-
-
-## 📊 Dataset
-
-The analysis will be supported by the simulated **NASA C-MAPSS** (Commercial Modular Aero-Propulsion System Simulation) dataset. This dataset consists of multivariate time-series data capturing run-to-failure degradation trajectories of turbofan engines.
-
-* **Data Type:** Multivariate Time Series.
-* **Features:** High-dimensional sensor readings (e.g., temperatures, pressures, fan speeds) and variable operating conditions (altitude and throttle settings) recorded over sequential time steps.
-* **Complexity:** The project will utilize all four sub-datasets (**FD001 through FD004**) to evaluate the model across a spectrum of complexities, ranging from single-condition/single-fault scenarios (FD001) to highly complex multi-condition/multi-fault environments (FD004).
-
-🔗 **Data Access:** The dataset is publicly available via the [NASA Prognostics Data Repository](https://www.nasa.gov/intelligent-systems-division/discovery-and-systems-health/pcoe/pcoe-data-set-repository/).
+### Dataset: NASA C-MAPSS
+We utilize the **FD001** turbofan degradation dataset, which includes:
+* **100 engines** run to failure for training.
+* **21 sensor variables** and **3 operational settings**.
+* High-noise, non-linear degradation trajectories.
 
 ---
 
-## 🛠️ Getting Started (To Be Updated)
-*Instructions for environment setup, training the model, and running inference will be added here.*
+## 2. EDA (Exploratory Data Analysis)
+
+Exploratory analysis was conducted to identify degradation signals across 21 sensors. Key findings include:
+* **High Correlation Sensors**: Sensors 11, 4, 12, 7, and 15 show strong monotonic trends (|r| > 0.64) with RUL.
+* **Feature Redundancy**: 8 sensors were identified as constant (zero variance) and removed to reduce model noise.
+* **Degradation Patterns**: Most engines exhibit a "healthy" initial phase followed by an accelerating degradation phase, motivating the use of **Piecewise RUL labeling**.
+
+![EDA Analysis](./vis/eda_plot.png)
+*(Note: Placeholder for EDA visualization showing sensor trends vs. RUL cycles)*
+
+---
+
+## 3. Modeling & Technical Analysis
+
+The project implements a progression of models, moving from static Bayesian inference to dynamic temporal sequences.
+
+### [Hierarchical Bayesian Model](./notebooks/hierarchical_bayesian_model(hbm)/README.md)
+A foundational approach using **Student-t Likelihood** and **NUTS sampling** to quantify prediction uncertainty. It employs hierarchical shrinkage to stabilize sensor coefficients but is limited by its linear mean structure.
+
+### [Dynamic Bayesian Network (DBN)](./notebooks/dynamic_bayesian_network_(dbn)/README.md)
+Explores graphical dependencies (Temporal & Instantaneous edges) and **Unscented Kalman Filtering**. While excellent for tracking hidden health states, these models struggled with the exponential penalty of the NASA Score due to their reliance on rigid process models.
+
+### [LSTM & GRU](./notebooks/time_series_models/README.md)
+> [Content TBD - Pending Input]
+Standard Recurrent Neural Network architectures designed to capture long-term dependencies in sensor time series.
+
+### [Bayesian Time Series Model (BSTS)](./notebooks/bayesian_time_series_model(bsts)/README.md)
+An ensemble-based approach using **Random Forest** and **Quantile Regression**. By capturing the "structural" nature of time series, it achieved significantly better calibration (65% CI coverage) and robustness compared to basic Kalman Filters.
+
+### [Prophet](./notebooks/prophet_model/README.md)
+> [Content TBD - Pending Input]
+An additive regression model that treats RUL prediction as a curve-fitting problem. It offers a strong balance between simplicity and performance, performing nearly as well as more complex deep learning models.
+
+### [Bayesian Recurrent Neural Network (BRNN)](./notebooks/bayesian_recurrent_neural_network(brnn)/README.md) — **Best Performing Model**
+Our most advanced architecture, combining **CNN, Attention, and LSTM** layers with **Monte Carlo Dropout**. This model treats RUL prediction as a risk-aware optimization task, utilizing a custom **Asymmetric NASA Loss** and 3-D Calibration to minimize costly "late predictions."
+
+---
+
+## 4. Conclusion & Project Evolution
+
+### The Technical Journey
+Our research followed a deliberate evolution based on performance feedback:
+1.  **Phase 1 (Foundational Bayesian)**: We initially deployed **HBM** and **DBN**. While mathematically elegant, they struggled to capture the rapid, non-linear changes in engine degradation, leading to poor **NASA Scores**.
+2.  **Phase 2 (Time Series Shift)**: We pivoted toward **Time Series** specific models. We discovered that capturing the temporal "momentum" of sensors was key. Traditional time series concepts allowed us to better track the accelerating wear-and-tear phase.
+3.  **Phase 3 (Optimization & Complexity)**: This led to the development of **BSTS**, **Prophet**, and **BRNN**. 
+
+### Model Performance Comparison
+
+| Model | RMSE | NASA Score | Characteristics |
+| :--- | :--- | :--- | :--- |
+| **BRNN** | **24.30** | **1,138.28** | Best Performance; High Complexity; Bayesian Uncertainty |
+| **Prophet** | *TBD* | *TBD* | High Efficiency; Excellent baseline; Easy to tune |
+| **BSTS** | 19.51 | 2,067.00 | Robust Ensemble; Good Uncertainty Calibration |
+| **UKF (Mark II)** | 35.85 | 3,311.77 | Physics-based; Sensitive to hyperparameters |
+
+### Final Insights
+* **The SOTA vs. Simplicity Trade-off**: **BRNN** is our best model, offering the most sophisticated risk mitigation via MC Dropout. However, **Prophet** provides a surprisingly competitive alternative. For industrial applications where deployment speed and interpretability are paramount, Prophet is a highly viable candidate.
+* **Risk Management > Precision**: Our journey proved that minimizing **NASA Score** (avoiding late predictions) requires a different strategy than minimizing **RMSE**. Incorporating "pessimism" into the model calibration is essential for aviation safety.
+
+---
+
+## 5. Contributors
+* **[Ryan Chen](https://github.com/RyanChenJung)**
+* **[Aditya Singh](https://github.com/asingh49-cmd)**
+* **[Mukul Ramesh](https://github.com/MukulRamesh)**
+* **[William Niu](https://github.com/williamniu)**
+* **[Eduardo Tovilla](https://github.com/Eduardo-Tovilla)**
+
+---
+*Last Updated: March 2026*

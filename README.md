@@ -26,7 +26,7 @@ Exploratory analysis was conducted to identify degradation signals across 21 sen
 * **Feature Redundancy**: 8 sensors were identified as constant (zero variance) and removed to reduce model noise.
 * **Degradation Patterns**: Most engines exhibit a "healthy" initial phase followed by an accelerating degradation phase, motivating the use of **Piecewise RUL labeling**.
 
-![EDA Analysis](./vis/eda_plot.png)
+![EDA Analysis](./viz/eda_plot.png)
 *(Note: Placeholder for EDA visualization showing sensor trends vs. RUL cycles)*
 
 ---

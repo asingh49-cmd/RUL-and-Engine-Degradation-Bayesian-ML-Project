@@ -36,7 +36,62 @@ Exploratory analysis was conducted to identify degradation signals across 21 sen
 The project implements a progression of models, moving from static Bayesian inference to dynamic temporal sequences.
 
 ### [Hierarchical Bayesian Model](./notebooks/hierarchical_bayesian_model(hbm)/README.md)
-A foundational approach using **Student-t Likelihood** and **NUTS sampling** to quantify prediction uncertainty. It employs hierarchical shrinkage to stabilize sensor coefficients but is limited by its linear mean structure.
+#### Target Transformation
+
+To stabilize variance, the target variable is transformed as:
+
+$$
+y = \log(1 + RUL)
+$$
+
+Predictions are later mapped back to the original RUL scale using the inverse transformation.
+
+#### Features
+
+The model uses operational settings and sensor measurements:
+
+- Operational settings (`setting_1–3`)
+- Sensor readings (`s1–s21`)
+- Engine cycle index
+- First-order sensor differences (`sensor_diff`)
+
+Sensor differences help capture degradation trends across cycles.
+
+#### Model
+
+We assume a Student-t observation model:
+
+$$
+y_i \sim \text{StudentT}(\nu, \mu_i, \sigma)
+$$
+
+with linear predictor:
+
+$$
+\mu_i = \alpha + X_i \beta
+$$
+
+where $\alpha$ is the intercept, $X_i$ the feature vector, and $\beta$ the regression coefficients.
+
+#### Hierarchical Priors
+
+We propose the following priors:
+
+$$
+\nu \sim \text{Exponential}(1/10), \quad
+\sigma \sim \text{HalfNormal}(1), \quad
+\alpha \sim \mathcal{N}(0, 1), \quad  
+\beta_j \sim \mathcal{N}(0,\tau^2), \quad
+\tau \sim \text{HalfNormal}(1)
+$$
+
+#### Inference
+
+Posterior inference is performed using the **No-U-Turn Sampler (NUTS)**, generating posterior predictive distributions that provide both RUL estimates and uncertainty intervals.
+
+#### Conslusion
+
+Hierarchical Abyesian turns out to be a foundational approach using **Student-t Likelihood** and **NUTS sampling** to quantify prediction uncertainty, and It employs hierarchical shrinkage to stabilize sensor coefficients but is limited by its linear mean structure.
 
 ### [Dynamic Bayesian Network (DBN)](./notebooks/dynamic_bayesian_network_(dbn)/README.md)
 Explores graphical dependencies (Temporal & Instantaneous edges) and **Unscented Kalman Filtering**. While excellent for tracking hidden health states, these models struggled with the exponential penalty of the NASA Score due to their reliance on rigid process models.

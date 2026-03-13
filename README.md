@@ -135,7 +135,7 @@ Quantile regression → 80% confidence intervals
 
  ## Results
  
-![Performance Comparison](comparison_results.png)
+![Performance Comparison](notebooks/bayesian_time_series_model(bsts)/comparison_scatter.png)
  
 | Metric | Kalman Filter | BSTS | Winner |
 |--------|---------------|------|--------|

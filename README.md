@@ -275,14 +275,6 @@ Evaluation is performed on the **FD001 test set** (100 engines). For each engine
 
 > Run the notebook to populate exact values — outputs are printed to cell stdout.
 
-### NASA Scoring Function
-
-An asymmetric penalty that weights **under-prediction** (late maintenance warning) more harshly than over-prediction:
-
-$$S = \sum_{i=1}^{N} \begin{cases} e^{-d_i/13} - 1 & \text{if } d_i < 0 \quad \text{(early prediction)} \\ e^{\,d_i/10} - 1 & \text{if } d_i \geq 0 \quad \text{(late prediction)} \end{cases}$$
-
-where $d_i = \hat{y}_i - y_i$. A **lower score is better**.
-
 ### [Bayesian Recurrent Neural Network (BRNN)](./notebooks/bayesian_recurrent_neural_network(brnn)/README.md) — **Best Performing Model**
 Our most advanced architecture, combining **CNN, Attention, and LSTM** layers with **Monte Carlo Dropout**. This model treats RUL prediction as a risk-aware optimization task, utilizing a custom **Asymmetric NASA Loss** and 3-D Calibration to minimize costly "late predictions."
 

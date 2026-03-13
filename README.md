@@ -149,7 +149,7 @@ health(t+1) = health(t) - rate
 RUL = health / rate
 ```
  
-**Benefits and Drawbacks:**:
+**Benefits and Drawbacks:**
 - Interpretable (explicit health tracking)
 - Requires extensive tuning (Q, R, H matrix)
 - Assumes linear relationships
@@ -161,7 +161,7 @@ RUL = health / rate
 Quantile regression → 80% confidence intervals
 ```
  
-**Features**:
+**Benefits and Drawbacks**:
 - Captures non-linear sensor patterns
 - Robust with default parameters
 - Ensemble provides natural uncertainty

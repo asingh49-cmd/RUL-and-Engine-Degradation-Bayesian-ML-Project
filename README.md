@@ -119,6 +119,7 @@ The UKF tracks engine health continuously but is highly sensitive to hyperparame
 - The DBN achieved a mean accuracy of roughly 52.6% for predicting 5-bin sensor states.
 
 - The UKF Mark II model achieved a Root Mean Square Error (RMSE) of 35.85 on the test set.
+<img width="989" height="590" alt="UKFtestdataresults" src="https://github.com/user-attachments/assets/75088b96-eefd-4bc7-875f-a8e61e651bd8" />
 
 - The UKF scored 3,311.77 on the official CMAPSS evaluation metric.
 

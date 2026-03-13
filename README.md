@@ -273,8 +273,6 @@ Evaluation is performed on the **FD001 test set** (100 engines). For each engine
 | Logistic Trend | Train | 14.50 | 19.04 | — |
 | Logistic Trend | **Test** | **17.91** | **22.69** | **1265.46** |
 
-> Run the notebook to populate exact values — outputs are printed to cell stdout.
-
 ### [Bayesian Recurrent Neural Network (BRNN)](./notebooks/bayesian_recurrent_neural_network(brnn)/README.md) — **Best Performing Model**
 Our most advanced architecture, combining **CNN, Attention, and LSTM** layers with **Monte Carlo Dropout**. This model treats RUL prediction as a risk-aware optimization task, utilizing a custom **Asymmetric NASA Loss** and 3-D Calibration to minimize costly "late predictions."
 

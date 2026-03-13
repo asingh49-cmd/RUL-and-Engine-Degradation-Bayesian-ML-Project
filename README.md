@@ -100,7 +100,55 @@ Explores graphical dependencies (Temporal & Instantaneous edges) and **Unscented
 Standard **Recurrent Neural Network** architectures designed to capture long-term dependencies in sensor time series.
 
 ### [Bayesian Time Series Model (BSTS)](./notebooks/bayesian_time_series_model(bsts)/README.md)
-An ensemble-based approach using **Random Forest** and **Quantile Regression**. By capturing the "structural" nature of time series, it achieved significantly better calibration (65% CI coverage) and robustness compared to basic Kalman Filters.
+
+#### Features
+**Input Features**: 8 sensors (temperature, pressure, speed) + cycle number  
+**BSTS Architecture**: 5× Random Forest (100 trees each, max_depth=20) + Gradient Boosting quantiles  
+**Kalman Tuning**: Q=0.05, R=1.0, constrained health ∈ [0,1.2] 
+
+## Two BSTS Approaches Tested
+ 
+### **1. Kalman Filter (Physics-Based)**
+**Idea**: Track hidden "health" state using sensor measurements
+```
+State: [health, degradation_rate]
+health(t+1) = health(t) - rate
+RUL = health / rate
+```
+ 
+**Benefits and Drawbacks:**:
+- Interpretable (explicit health tracking)
+- Requires extensive tuning (Q, R, H matrix)
+- Assumes linear relationships
+ 
+### **2. BSTS (Data-Driven Ensemble)**
+**Idea**: Ensemble of 5 Random Forests + quantile regression for uncertainty
+```
+5 RF models → mean prediction
+Quantile regression → 80% confidence intervals
+```
+ 
+**Features**:
+- Captures non-linear sensor patterns
+- Robust with default parameters
+- Ensemble provides natural uncertainty
+
+ ## Results
+ 
+![Performance Comparison](comparison_results.png)
+ 
+| Metric | Kalman Filter | BSTS | Winner |
+|--------|---------------|------|--------|
+| **RMSE** | 77.80 cycles | **19.51 cycles** | **BSTS (4× better)** |
+| **NASA Score** | 4,335,314 | **2,067** | **BSTS (2,097× better)** |
+| **80% CI Coverage** | 26% | 65% | **BSTS** |
+ 
+### **Key Visual Insights**
+ 
+**Left (Kalman)**: Predictions collapsed near zero - failed to track degradation  
+**Right (BSTS)**: Strong correlation with true RUL across full range
+
+**Key Takeaway**: BSTS achieved competitive performance (RMSE=19.51) with robust uncertainty quantification, outperforming the tuned Kalman Filter by 4×.
 
 ### [Prophet](./notebooks/prophet_model/README.md)
 An **additive regression model** that treats RUL prediction as a curve-fitting problem. It offers a strong balance between simplicity and performance, performing nearly as well as more complex deep learning models.

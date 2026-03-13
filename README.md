@@ -97,15 +97,13 @@ Hierarchical Abyesian turns out to be a foundational approach using **Student-t 
 Explores graphical dependencies (Temporal & Instantaneous edges) and **Unscented Kalman Filtering**. While excellent for tracking hidden health states, these models struggled with the exponential penalty of the NASA Score due to their reliance on rigid process models.
 
 ### [LSTM & GRU](./notebooks/time_series_models/README.md)
-> [Content TBD - Pending Input]
-Standard Recurrent Neural Network architectures designed to capture long-term dependencies in sensor time series.
+Standard **Recurrent Neural Network** architectures designed to capture long-term dependencies in sensor time series.
 
 ### [Bayesian Time Series Model (BSTS)](./notebooks/bayesian_time_series_model(bsts)/README.md)
 An ensemble-based approach using **Random Forest** and **Quantile Regression**. By capturing the "structural" nature of time series, it achieved significantly better calibration (65% CI coverage) and robustness compared to basic Kalman Filters.
 
 ### [Prophet](./notebooks/prophet_model/README.md)
-> [Content TBD - Pending Input]
-An additive regression model that treats RUL prediction as a curve-fitting problem. It offers a strong balance between simplicity and performance, performing nearly as well as more complex deep learning models.
+An **additive regression model** that treats RUL prediction as a curve-fitting problem. It offers a strong balance between simplicity and performance, performing nearly as well as more complex deep learning models.
 
 ### [Bayesian Recurrent Neural Network (BRNN)](./notebooks/bayesian_recurrent_neural_network(brnn)/README.md) — **Best Performing Model**
 Our most advanced architecture, combining **CNN, Attention, and LSTM** layers with **Monte Carlo Dropout**. This model treats RUL prediction as a risk-aware optimization task, utilizing a custom **Asymmetric NASA Loss** and 3-D Calibration to minimize costly "late predictions."

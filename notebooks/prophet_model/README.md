@@ -271,10 +271,10 @@ Evaluation is performed on the **FD001 test set** (100 engines). For each engine
 
 | Model | Split | MAE | RMSE | NASA Score |
 |-------|-------|-----|------|------------|
-| Linear Trend | Train | reported in notebook | reported in notebook | — |
-| Linear Trend | **Test** | **reported in notebook** | **reported in notebook** | **reported in notebook** |
-| Logistic Trend | Train | reported in notebook | reported in notebook | — |
-| Logistic Trend | **Test** | **reported in notebook** | **reported in notebook** | **reported in notebook** |
+| Linear Trend | Train | 14.08 | 18.55 | — |
+| Linear Trend | **Test** | **17.84** | **22.62** | **1289.23** |
+| Logistic Trend | Train | 14.50 | 19.04 | — |
+| Logistic Trend | **Test** | **17.91** | **22.69** | **1265.46** |
 
 > Run the notebook to populate exact values — outputs are printed to cell stdout.
 
@@ -342,3 +342,4 @@ Prophet/
 - Taylor, S. J., & Letham, B. (2018). [Forecasting at scale](https://doi.org/10.1080/00031305.2017.1380080). *The American Statistician*, 72(1), 37–45.
 - Saxena, A., Goebel, K., Simon, D., & Eklund, N. (2008). Damage propagation modeling for aircraft engine run-to-failure simulation. *Proceedings of the 1st International Conference on Prognostics and Health Management (PHM)*.
 - [NASA C-MAPSS Dataset — PCOE Data Repository](https://www.nasa.gov/intelligent-systems-division/discovery-and-systems-health/pcoe/pcoe-data-set-repository/)
+

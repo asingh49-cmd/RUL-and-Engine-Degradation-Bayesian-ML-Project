@@ -188,6 +188,97 @@ Quantile regression → 80% confidence intervals
 ### [Prophet](./notebooks/prophet_model/README.md)
 An **additive regression model** that treats RUL prediction as a curve-fitting problem. It offers a strong balance between simplicity and performance, performing nearly as well as more complex deep learning models.
 
+This module applies **Meta's Prophet** — a Bayesian structural time-series model — to the task of **Remaining Useful Life (RUL) prediction** for aircraft turbofan engines, using the NASA C-MAPSS FD001 benchmark dataset.
+
+Prophet was originally designed for calendar-driven business forecasting. Here, it is repurposed as a **Bayesian regression framework** by disabling all seasonality components and driving predictions entirely through 18 sensor and operational-setting regressors. Two growth modes are explored and compared:
+
+| Model | Prophet Growth Mode | Core Idea |
+|-------|---------------------|-----------|
+| **Linear Trend** | `linear` | Piece-wise linear degradation trend; predictions clipped to `[0, 125]` post-inference |
+| **Logistic Trend** | `logistic` | Saturating growth with explicit floor and cap enforces bounded RUL predictions natively |
+
+The work sits within a broader **Bayesian ML group project** at the University of Chicago, where five methods are compared side-by-side on the same dataset.
+
+---
+
+
+## Model Architecture
+
+Prophet decomposes the target signal into additive components:
+
+$$y(t) = g(t) + s(t) + h(t) + \boldsymbol{\beta}^\top \mathbf{x}(t) + \varepsilon_t$$
+
+| Component | Symbol | Role in this application |
+|-----------|--------|--------------------------|
+| Trend | $g(t)$ | Captures the engine's underlying degradation trajectory |
+| Seasonality | $s(t)$ | **Disabled** — no calendar effects in mechanical data |
+| Holidays | $h(t)$ | **Disabled** |
+| External regressors | $\boldsymbol{\beta}^\top \mathbf{x}(t)$ | All 18 sensor/setting features drive the prediction |
+| Noise | $\varepsilon_t$ | Gaussian observation noise |
+
+### Model 1 — Linear Trend
+
+```python
+Prophet(
+    growth="linear",
+    yearly_seasonality=False,
+    weekly_seasonality=False,
+    daily_seasonality=False,
+    changepoint_prior_scale=0.05
+)
+```
+
+The trend $g(t)$ is modeled as a **piece-wise linear function**:
+
+$$g(t) = (k + \mathbf{a}(t)^\top \boldsymbol{\delta})\,t + (m + \mathbf{a}(t)^\top \boldsymbol{\gamma})$$
+
+where $k$ is the base growth rate, $\boldsymbol{\delta}$ are changepoint adjustments, and $\mathbf{a}(t)$ is an indicator vector for active changepoints. Predictions are post-hoc clipped to $[0,\ 125]$.
+
+### Model 2 — Logistic (Non-Linear) Trend
+
+```python
+Prophet(
+    growth="logistic",
+    yearly_seasonality=False,
+    weekly_seasonality=False,
+    daily_seasonality=False,
+    changepoint_prior_scale=0.05
+)
+```
+
+The trend is replaced by a **saturating logistic function**:
+
+$$g(t) = \frac{L}{1 + e^{-(k + a(t)^\top \boldsymbol{\delta})(t - (m + a(t)^\top \boldsymbol{\gamma}))}}$$
+
+- `cap = 125` (= `RUL_CAP`) is passed as a column in the DataFrame, enforcing the natural upper bound.
+- `floor = 0` prevents negative predictions natively at the model level.
+- This eliminates the need for post-hoc output clipping.
+
+---
+
+## Final Results
+
+Evaluation is performed on the **FD001 test set** (100 engines). For each engine, only the **final cycle's prediction** is compared against the ground-truth RUL.
+
+### Metrics Summary
+
+| Model | Split | MAE | RMSE | NASA Score |
+|-------|-------|-----|------|------------|
+| Linear Trend | Train | 14.08 | 18.55 | — |
+| Linear Trend | **Test** | **17.84** | **22.62** | **1289.23** |
+| Logistic Trend | Train | 14.50 | 19.04 | — |
+| Logistic Trend | **Test** | **17.91** | **22.69** | **1265.46** |
+
+> Run the notebook to populate exact values — outputs are printed to cell stdout.
+
+### NASA Scoring Function
+
+An asymmetric penalty that weights **under-prediction** (late maintenance warning) more harshly than over-prediction:
+
+$$S = \sum_{i=1}^{N} \begin{cases} e^{-d_i/13} - 1 & \text{if } d_i < 0 \quad \text{(early prediction)} \\ e^{\,d_i/10} - 1 & \text{if } d_i \geq 0 \quad \text{(late prediction)} \end{cases}$$
+
+where $d_i = \hat{y}_i - y_i$. A **lower score is better**.
+
 ### [Bayesian Recurrent Neural Network (BRNN)](./notebooks/bayesian_recurrent_neural_network(brnn)/README.md) — **Best Performing Model**
 Our most advanced architecture, combining **CNN, Attention, and LSTM** layers with **Monte Carlo Dropout**. This model treats RUL prediction as a risk-aware optimization task, utilizing a custom **Asymmetric NASA Loss** and 3-D Calibration to minimize costly "late predictions."
 

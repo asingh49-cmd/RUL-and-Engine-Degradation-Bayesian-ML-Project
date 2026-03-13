@@ -258,6 +258,8 @@ $$g(t) = \frac{L}{1 + e^{-(k + a(t)^\top \boldsymbol{\delta})(t - (m + a(t)^\top
 
 <img width="463" height="410" alt="Screenshot 2026-03-13 133713" src="https://github.com/user-attachments/assets/c3d84d0d-a549-4c18-819b-2554fd7e70f0" />
 
+<img width="1028" height="589" alt="image" src="https://github.com/user-attachments/assets/1520f97c-9418-44b9-a8e5-94791b84bbe7" />
+
 ## Final Results
 
 Evaluation is performed on the **FD001 test set** (100 engines). For each engine, only the **final cycle's prediction** is compared against the ground-truth RUL.

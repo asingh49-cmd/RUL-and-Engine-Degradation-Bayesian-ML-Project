@@ -96,7 +96,7 @@ Hierarchical Abyesian turns out to be a foundational approach using **Student-t 
 ### [Dynamic Bayesian Network (DBN)](./notebooks/dynamic_bayesian_network_(dbn)/README.md)
 Explores graphical dependencies (Temporal & Instantaneous edges) and **Unscented Kalman Filtering**. While excellent for tracking hidden health states, these models struggled with the exponential penalty of the NASA Score due to their reliance on rigid process models.
 
-### [LSTM & GRU](./notebooks/time_series_models/README.md)
+### [LSTM & GRU](./notebooks/time_series_models)
 Standard **Recurrent Neural Network** architectures designed to capture long-term dependencies in sensor time series.
 
 ### [Bayesian Time Series Model (BSTS)](./notebooks/bayesian_time_series_model(bsts)/README.md)

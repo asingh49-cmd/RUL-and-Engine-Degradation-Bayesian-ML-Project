@@ -104,7 +104,7 @@ Standard **Recurrent Neural Network** architectures designed to capture long-ter
 #### Features
 **Input Features**: 8 sensors (temperature, pressure, speed) + cycle number  
 **BSTS Architecture**: 5× Random Forest (100 trees each, max_depth=20) + Gradient Boosting quantiles  
-**Kalman Tuning**: Q=0.05, R=1.0, constrained health ∈ [0,1.2] 
+**Kalman Filter Parameters**: Q=0.05, R=1.0, constrained health ∈ [0,1.2] 
 
 ## Two BSTS Approaches Tested
  

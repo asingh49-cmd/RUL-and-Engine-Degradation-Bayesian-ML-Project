@@ -102,6 +102,8 @@ The DBN is a graphical model that captures temporal and instantaneous dependenci
 - The network architecture contains 34 nodes and 77 edges across two time slices.
 - Continuous features were discretized into 5 bins using quantile binning to facilitate the model.
 - This approach yields high interpretability for understanding sensor relationships but loses fine-grained information due to discretization.
+<img width="1143" height="547" alt="image" src="https://github.com/user-attachments/assets/0c77bb30-eb00-4f8c-90fd-5fe5bf3a8f3c" />
+
 
 #### Unscented Kalman Filter (UKF)
 The UKF is a recursive Bayesian filter used to estimate the hidden health state of an engine from noisy sensor observations.

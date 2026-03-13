@@ -131,7 +131,7 @@ Standard **Recurrent Neural Network** architectures designed to capture long-ter
 ### [Bayesian Time Series Model (BSTS)](./notebooks/bayesian_time_series_model(bsts)/README.md)
 
 #### Features
-**Input Features**: 8 sensors (temperature, pressure, speed) + cycle number (RUL Cap of 120 yielded best performance) 
+**Input Features**: 8 sensors (temperature, pressure, speed) + cycle number (RUL Cap of 120) 
 **BSTS Architecture**: 5× Random Forest (100 trees each, max_depth=20) + Gradient Boosting quantiles  
 **Kalman Filter Parameters**: Q=0.05, R=1.0, constrained health ∈ [0,1.2]
   - The H Matrix - The Sensor Connection to Health

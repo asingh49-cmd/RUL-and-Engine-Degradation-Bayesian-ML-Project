@@ -93,9 +93,38 @@ Posterior inference is performed using the **No-U-Turn Sampler (NUTS)**, generat
 
 Hierarchical Abyesian turns out to be a foundational approach using **Student-t Likelihood** and **NUTS sampling** to quantify prediction uncertainty, and It employs hierarchical shrinkage to stabilize sensor coefficients but is limited by its linear mean structure.
 
-### [Dynamic Bayesian Network (DBN)](./notebooks/dynamic_bayesian_network_(dbn)/README.md)
-Explores graphical dependencies (Temporal & Instantaneous edges) and **Unscented Kalman Filtering**. While excellent for tracking hidden health states, these models struggled with the exponential penalty of the NASA Score due to their reliance on rigid process models.
+### [Dynamic Bayesian Network (DBN) and Unscented Kalman Filter (UKF)](./notebooks/dynamic_bayesian_network_(dbn)/README.md)
+While excellent for tracking hidden health states, these models struggled with the exponential penalty of the NASA Score due to their reliance on rigid process models.
 
+#### Dynamic Bayesian Network (DBN)
+The DBN is a graphical model that captures temporal and instantaneous dependencies between operational settings and sensor readings.
+
+- The network architecture contains 34 nodes and 77 edges across two time slices.
+- Continuous features were discretized into 5 bins using quantile binning to facilitate the model.
+- This approach yields high interpretability for understanding sensor relationships but loses fine-grained information due to discretization.
+
+#### Unscented Kalman Filter (UKF)
+The UKF is a recursive Bayesian filter used to estimate the hidden health state of an engine from noisy sensor observations.
+
+- The advanced "Mark II" implementation uses PCA to compress 14 sensors into 2 principal components.
+- Degradation is modeled using an exponential decay function defined by the following state equations:
+
+$$x(t + 1) = x(t) - \text{decay} \times dt$$
+
+$$\text{decay} = \text{baseline} \times \exp(\text{curvature} \times (1 - x(t)))$$
+
+The UKF tracks engine health continuously but is highly sensitive to hyperparameters like baseline and curvature.
+
+#### Results
+- The DBN achieved a mean accuracy of roughly 52.6% for predicting 5-bin sensor states.
+
+- The UKF Mark II model achieved a Root Mean Square Error (RMSE) of 35.85 on the test set.
+
+- The UKF scored 3,311.77 on the official CMAPSS evaluation metric.
+
+- The CMAPSS scoring function heavily penalizes late RUL predictions compared to early predictions.
+
+- Both models struggle significantly with outlier engines that fail unexpectedly early.
 ### [LSTM & GRU](./notebooks/time_series_models)
 Standard **Recurrent Neural Network** architectures designed to capture long-term dependencies in sensor time series.
 

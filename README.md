@@ -180,7 +180,7 @@ Our research followed a deliberate evolution based on performance feedback:
 | Model | RMSE | NASA Score | Characteristics |
 | :--- | :--- | :--- | :--- |
 | **BRNN** | **24.30** | **1,138.28** | Best Performance; High Complexity; Bayesian Uncertainty |
-| **Prophet** | *TBD* | *TBD* | High Efficiency; Excellent baseline; Easy to tune |
+| **Prophet** | 22.69 | 1265.47 | High Efficiency; Excellent baseline; Easy to tune |
 | **BSTS** | 19.51 | 2,067.00 | Robust Ensemble; Good Uncertainty Calibration |
 | **UKF (Mark II)** | 35.85 | 3,311.77 | Physics-based; Sensitive to hyperparameters |
 
